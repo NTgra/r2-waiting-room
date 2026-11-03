@@ -89,18 +89,18 @@ def run(mock: bool, fixture: str, notify: bool = True) -> int:
             raw, errors = fetch_live(cfg.get("order_id"))
             prev = crypto.read_enc(state.RAW_ENC)
     except RivianAuthError as e:
-        log.error("session expired: %s", e)
-        meta = dict(meta_prev, last_poll_at=now, ok=False, auth_expired=True, errors={"auth": str(e)}, mode="live",
+        log.error("session expired")
+        meta = dict(meta_prev, last_poll_at=now, ok=False, auth_expired=True, errors={"auth": "Session expired; sign in again."}, mode="live",
                     first_poll_at=first_poll_at)
         state.write_json(state.META, meta)
         if notify:
             send("Session expired, polling paused",
-                 f"Rivian returned: {e}\nRun the Login workflow again (start, then finish with the code).",
+                 f"Run the Login workflow again (start, then finish with the code).",
                  priority="high", tags="rotating_light")
         return 2
     except Exception as e:  # noqa: BLE001
-        log.exception("poll failed")
-        meta = dict(meta_prev, last_poll_at=now, ok=False, errors={"poll": str(e)}, first_poll_at=first_poll_at)
+        log.error("poll failed")
+        meta = dict(meta_prev, last_poll_at=now, ok=False, errors={"poll": "Poll failed"}, first_poll_at=first_poll_at)
         state.write_json(state.META, meta)
         return 1
 
