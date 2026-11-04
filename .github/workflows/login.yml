@@ -34,12 +34,31 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      - name: Login (${{ inputs.step }})
+      - name: Login
         env:
           SESSION_KEY: ${{ secrets.SESSION_KEY }}
           RIVIAN_EMAIL: ${{ secrets.RIVIAN_EMAIL }}
           RIVIAN_PASSWORD: ${{ secrets.RIVIAN_PASSWORD }}
-        run: python -m app.login ${{ inputs.step }} --code "${{ inputs.code }}"
+          LOGIN_STEP: ${{ inputs.step }}
+          OTP_CODE: ${{ inputs.code }}
+        shell: bash
+        run: |
+          case "$LOGIN_STEP" in
+            start)
+              python -m app.login start
+              ;;
+            finish)
+              if [[ ! "$OTP_CODE" =~ ^[0-9]{6}$ ]]; then
+                echo "::error::Enter a six-digit verification code."
+                exit 1
+              fi
+              python -m app.login finish --code "$OTP_CODE"
+              ;;
+            *)
+              echo "::error::Invalid login step."
+              exit 1
+              ;;
+          esac
 
       - name: First poll after sign-in
         if: inputs.step == 'finish'
