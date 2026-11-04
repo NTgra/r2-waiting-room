@@ -1,8 +1,1 @@
-{
-  "last_poll_at": "2026-11-04T01:00:59Z",
-  "ok": false,
-  "errors": {
-    "poll": "Poll failed"
-  },
-  "first_poll_at": "2026-11-04T00:58:05Z"
-}
+{}
