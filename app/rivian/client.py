@@ -108,7 +108,7 @@ class RivianClient:
         self.session.refresh_token = login.get("refreshToken", "") or ""
         self.session.user_session_token = login.get("userSessionToken", "") or ""
         if not self.session.user_session_token:
-            raise RivianAuthError(f"Login response carried no userSessionToken: {login}")
+            raise RivianAuthError("Login response carried no userSessionToken")
 
     # ----- queries ----------------------------------------------------------
 
