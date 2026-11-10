@@ -183,7 +183,7 @@ def _local_time(iso: str) -> str:
     from datetime import datetime
     from zoneinfo import ZoneInfo
 
-    tz = os.environ.get("TZ", "America/New_York")
+    tz = os.environ.get("TZ", "America/Denver")
     try:
         d = datetime.fromisoformat(iso.replace("Z", "+00:00")).astimezone(ZoneInfo(tz))
     except Exception:  # noqa: BLE001
